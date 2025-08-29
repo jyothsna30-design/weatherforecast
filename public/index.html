@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 
+        weather prediction</title>
+        <link rel="stylesheet" href="/output/output.css">
+        <script src="index.js" defer></script>
+</head>
+
+<body class="bg-[url('/public/clouds.gif')] bg-cover bg-center h-screen">
+    <div class="text-center">
+        <form>
+        <input type="text" id="city" placeholder="search city" class="border-2 bg-white rounded-lg m-5 w-80 h-10">
+        <button type="button" id="inputbutton" class="bg-white rounded-lg w-20 hover:scale-110">Search</button>
+        </form>
+    </div>
+    <div class="flex flex-row justify-center m-6">
+    <div>
+    <div id="tempinfo" class="text-white m-2">
+
+    </div>
+    <div id="weatherinfo" class="text-white m-2">
+
+    </div>
+    
+    </div>
+    <div><img id="weathericon"> </div>
+    <div id="humidity" class="text-white border-0 m-20"></div>
+    <div id="wind" class="text-white border-0 m-20"></div>
+    </div>
+    <div id="forecast" class="text-white flex flex-row justify-center">
+        
+    </div>
+    
+</body>
+</html>
