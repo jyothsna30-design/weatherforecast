@@ -46,8 +46,8 @@ function displayWeather(response){
       weatherinfo.innerHTML = `<p class="text-3xl">${cityName}</p><p class="text-xl">${date.toDateString()}</p><p class="text-xl">${des}</p>`;
       weathericon.src= iconurl;
       weathericon.alt= des;
-      hum.innerHTML = `<p class="text-2xl">Humidity: ${humidity}</p>`;
-      wi.innerHTML = `<p class="text-2xl">Wind: ${wind}</p>`;
+      hum.innerHTML = `<img src="humidity.png" alt="humidity" class="w-20 h-20"><p class="text-2xl">Humidity: ${humidity}</p>`;
+      wi.innerHTML = `<img src="wind.png" class="w-20 h-20"><p class="text-2xl">Wind: ${wind}</p>`;
 
 
 
