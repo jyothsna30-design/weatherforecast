@@ -30,6 +30,7 @@ function displayWeather(response){
     else{
         const cityName= response.name;
         const temperature =response.main.temp;
+        setTemp(temperature);
         const des= response.weather[0].description;
         const humidity= response.main.humidity;
         const wind =response.wind.speed;
@@ -37,9 +38,10 @@ function displayWeather(response){
         const iconurl = `https://openweathermap.org/img/wn/${iconcode}@4x.png`;
         const todaydate= response.dt;
         const date= new Date(todaydate * 1000);
-        
+
 
         
+            
      temp.innerHTML = `<p class="text-3xl">${temperature}°C</p>`;
       weatherinfo.innerHTML = `<p class="text-3xl">${cityName}</p><p class="text-xl">${date.toDateString()}</p><p class="text-xl">${des}</p>`;
       weathericon.src= iconurl;
@@ -48,26 +50,37 @@ function displayWeather(response){
       wi.innerHTML = `<p class="text-2xl">Wind: ${wind}</p>`;
 
 
-      
-
-      
-
-
-
-      //const daily = response.list.filter(item => item.dt_txt.includes("12:00:00"));
-       //daily.forEach(f => {
-        //const date= new Date(f.dt * 1000).toDateString();
-        //console.log(date);
-         //const temperature =response.main.temp;
-        //const des= response.weather[0].description;
-        //const iconcode= response.weather[0].icon;
-        //const iconurl = `https://openweathermap.org/img/wn/${iconcode}@4x.png`;
-        
-        //forecast.innerHTML+= `<p>${date}</p><p>${temperature}</p><p>${des}</p>`
-        //forecast.src = iconurl;
-      //});
 
     }
+}
+function setTemp(temp) {
+  tempInCelsius = temp;
+  isCelsius = true; // Reset to Celsius by default
+  tempChange();
+}
+document.getElementById("changetemp").addEventListener("click", () => {
+  isCelsius = !isCelsius;
+  tempChange();
+});
+
+let tempInCelsius = null;
+let isCelsius = true;
+
+function tempChange(){
+
+   
+    const temp = document.getElementById("tempinfo");
+    const changetemp = document.getElementById("changetemp");
+   
+    if (isCelsius) {
+    temp.innerHTML = `<p class="text-3xl">${tempInCelsius.toFixed(1)} °C</p>`;
+    changetemp.textContent = "Switch to °F";
+  } else {
+    const tempF = (tempInCelsius * 9/5) + 32;
+    temp.innerHTML = `<p class="text-3xl">${tempF.toFixed(1)} °F</p>`;
+    changetemp.textContent = "Switch to °C";
+  }
+
 }
 
 function forecastWeather(response){
