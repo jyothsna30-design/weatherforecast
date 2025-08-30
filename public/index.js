@@ -25,11 +25,11 @@ function displayWeather(response){
     weatherinfo.innerHTML="";
 
     if(response.cod === "404"){
-             weatherinfo.innerHTML=`<p>${response.message}</p>`;
+             weatherinfo.innerHTML=`<p class="text-3xl">${response.message}</p><img src="" alt="not found"> `;
     }
     else{
         const cityName= response.name;
-        const temperature =response.main.temp;
+        const temperature =Math.round(response.main.temp-273.15);
         setTemp(temperature);
         const des= response.weather[0].description;
         const humidity= response.main.humidity;
@@ -40,13 +40,12 @@ function displayWeather(response){
         const date= new Date(todaydate * 1000);
 
 
-        
-            
+      if(temperature>=40){alert("High temperature");}
      temp.innerHTML = `<p class="text-3xl">${temperature}°C</p>`;
       weatherinfo.innerHTML = `<p class="text-3xl">${cityName}</p><p class="text-xl">${date.toDateString()}</p><p class="text-xl">${des}</p>`;
       weathericon.src= iconurl;
       weathericon.alt= des;
-      hum.innerHTML = `<img src="humidity.png" alt="humidity" class="w-20 h-20"><p class="text-2xl">Humidity: ${humidity}</p>`;
+      hum.innerHTML = `<img src="humidity.gif" alt="humidity" class="w-20 h-20"><p class="text-2xl">Humidity: ${humidity}</p>`;
       wi.innerHTML = `<img src="wind.png" class="w-20 h-20"><p class="text-2xl">Wind: ${wind}</p>`;
 
 
