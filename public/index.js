@@ -11,9 +11,15 @@ inputbutton.addEventListener("click",function showData(){
     //const key='02cee0609024e20db19067082c030dce';
     const url= `https://api.openweathermap.org/data/2.5/weather?q=${citys}&APPID=02cee0609024e20db19067082c030dce`;
     const forecaturl = `https://api.openweathermap.org/data/2.5/forecast?q=${citys}&APPID=02cee0609024e20db19067082c030dce`;
-    fetch(url).then(response=>response.json()).then(response=> {displayWeather(response)}).catch(error=>console.log(error));
-    fetch(forecaturl).then(response=>response.json()).then(response=> {forecastWeather(response)}).catch(error=>console.log(error));
+    fetch(url).then(response=>response.json()).then(response=> {displayWeather(response)}).catch(error=>{displayError(error)});
+    fetch(forecaturl).then(response=>response.json()).then(response=> {forecastWeather(response)}).catch(error=>{displayError(error)});
 })
+
+function displayError(error){
+    const err = document.getElementById("errordiv");
+    err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><img class="m-50" src="error.jpg" alt="invalid url">`;
+
+}
 
 function displayWeather(response){
     const temp = document.getElementById("tempinfo");
@@ -25,7 +31,7 @@ function displayWeather(response){
     weatherinfo.innerHTML="";
 
     if(response.cod === "404"){
-             weatherinfo.innerHTML=`<p class="text-3xl">${response.message}</p><img src="" alt="not found"> `;
+             weatherinfo.innerHTML=`<p class="text-3xl text-center">${response.message}</p><img src="err.png" alt="not found" class="w-50 h-50"> `;
     }
     else{
         const cityName= response.name;
