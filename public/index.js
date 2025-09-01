@@ -8,16 +8,35 @@ inputbutton.addEventListener("click",function showData(){
         return;
     }
     const citys=city.value;
-    //const key='02cee0609024e20db19067082c030dce';
-    const url= `https://api.openweathermap.org/data/2.5/weather?q=${citys}&APPID=02cee0609024e20db19067082c030dce`;
-    const forecaturl = `https://api.openweathermap.org/data/2.5/forecast?q=${citys}&APPID=02cee0609024e20db19067082c030dce`;
+   
+    const url= `https://api.openweathermap.org/data/2.5/weather?q=${citys}&APPID=02cee0609024e20db19067082c030dce&units=metric`;
+    const forecaturl = `https://api.openweathermap.org/data/2.5/forecast?q=${citys}&APPID=02cee0609024e20db19067082c030dce&units=metric`;
+    
     fetch(url).then(response=>response.json()).then(response=> {displayWeather(response)}).catch(error=>{displayError(error)});
     fetch(forecaturl).then(response=>response.json()).then(response=> {forecastWeather(response)}).catch(error=>{displayError(error)});
-})
+    
+  })
 
 function displayError(error){
     const err = document.getElementById("errordiv");
     err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><img class="m-50" src="error.jpg" alt="invalid url">`;
+
+}
+function clicked(){
+  if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+      const lourl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=02cee0609024e20db19067082c030dce&units=metric`;
+      const fourl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=02cee0609024e20db19067082c030dce&units=metric`;
+      fetch(lourl).then(response=>response.json()).then(response=> {displayWeather(response)}).catch(error=>{displayError(error)});
+     fetch(fourl).then(response=>response.json()).then(response=> {forecastWeather(response)}).catch(error=>{displayError(error)});   
+    })
+      }
+        else{ 
+          const weatherinfo = document.getElementById("weatherinfo");
+                weatherinfo.innerHTML = "<p>Geolocation is not supported by this browser.</p>";
+        }
 
 }
 
@@ -35,7 +54,8 @@ function displayWeather(response){
     }
     else{
         const cityName= response.name;
-        const temperature =Math.round(response.main.temp-273.15);
+        console.log(response.main.temp);
+        const temperature =Math.round(response.main.temp);
         setTemp(temperature);
         const des= response.weather[0].description;
         const humidity= response.main.humidity;
@@ -89,6 +109,8 @@ function tempChange(){
 }
 
 function forecastWeather(response){
+
+  document.getElementById("forecast").innerText="";
     const forecastList = response.list;
         const dailyForecasts = [];
          if (!forecastList || !Array.isArray(forecastList)) {
@@ -113,5 +135,8 @@ function forecastWeather(response){
      
     console.log(`${date}: ${temp}°C, ${desc}`);
     });
+    
+
+
    
 }
