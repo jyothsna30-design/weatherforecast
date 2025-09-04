@@ -167,7 +167,7 @@ function displayWeather(response){
 
        //alert if temp is greater than 40
       if(temperature>=40){alert("High temperature, Be careful");}
-     temp.innerHTML = `<p class="text-3xl">${temperature}°C</p>`;
+     temp.innerHTML = `<p class="text-3xl"><img src="temperature.png" alt="temperature" class="w-10 h-10">${temperature}°C</p>`;
       weatherinfo.innerHTML = `<p class="text-3xl">${cityName}</p><p class="text-xl">${date.toDateString()}</p><p class="text-xl">${des}</p>`;
       weathericon.src= iconurl;
       weathericon.alt= des;
@@ -230,11 +230,13 @@ function forecastWeather(response){
     const date = new Date(forecast.dt * 1000).toDateString();
     const temp = Math.round(forecast.main.temp);
     const desc = forecast.weather[0].description;
+    const humidity= forecast.main.humidity;
+        const wind =forecast.wind.speed;
      const iconcode = forecast.weather[0].icon;
      const iconurl=`https://openweathermap.org/img/wn/${iconcode}@2x.png`
     const fore = document.getElementById("forecast");
     
-     fore.innerHTML+= `<div id="fdiv" class="flex flex-col border-2 rounded-lg bg-black m-2 p-2"><img src=${iconurl} alt="icon"><p>${date}</p><p>${temp}°C</p><p>${desc}</p></div>`;
+     fore.innerHTML+= `<div id="fdiv" class="flex flex-col border-2 rounded-lg bg-black m-2 p-2"><img src=${iconurl} alt="icon"><p>${date}</p><p class="flex flex-row"><img src="temperature.png" alt="temperature" width="20" class="m-2">${temp}°C</p><p>${desc}</p><p class="flex flex-row"><img src="humi1.png" alt="humidity" width="20" class="m-2">${humidity}</p><p class="flex flex-row"><img src="wind1.png" alt="wind" width="20" class="m-2">${wind}</p></div>`;
      
     console.log(`${date}: ${temp}°C, ${desc}`);
     });
