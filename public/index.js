@@ -2,7 +2,7 @@ const dropdown = document.getElementById("dropdown");
 const storageKey = "searchedCities";
 const inputbutton = document.getElementById("inputbutton");
 const city = document.getElementById("city");
-
+//storing city values 
 function saveCity() {
   const value = city.value.trim();
   if (!value) return;
@@ -19,19 +19,19 @@ function saveCity() {
   city.value = "";
   dropdown.style.display = "none";
 }
+
+//displaying dropdown
 function showDropdown(arr) {
   dropdown.innerHTML = "";
-
+// if arr is null then no display dropdown 
   if (arr.length === 0) {
     dropdown.style.display = "none";
     return;
   }
-
+// display the names of searched cities
   arr.forEach(citys => {
     const div = document.createElement("div");
     div.textContent = citys;
-    div.style.margin = "10px";
-    div.style.top="9px";
     div.addEventListener("click", () => {
       city.value = citys;
       dropdown.style.display = "none";
@@ -41,8 +41,10 @@ function showDropdown(arr) {
 
   dropdown.style.display = "block";
 }
+
+//on input, getting the array of cities and send it to display dropdown
 city.addEventListener("input", () => {
-  const query = inn.value.trim().toLowerCase();
+  const query = city.value.trim().toLowerCase();
   let cities = localStorage.getItem(storageKey);
   let arr = cities ? cities.split(",").filter(Boolean) : [];
 
@@ -53,6 +55,7 @@ city.addEventListener("input", () => {
   showDropdown(matches);
 });
 
+//on focus, getting the array and calling display dropdown
 city.addEventListener("focus", () => {
   let cities = localStorage.getItem(storageKey);
   let arr = cities ? cities.split(",").filter(Boolean) : [];
@@ -60,15 +63,19 @@ city.addEventListener("focus", () => {
   showDropdown(arr);
 });
 
+
+//if clicked outside the search box or on the document dropdown gets hidden
 document.addEventListener("click", (e) => {
-  if (e.target !== inn && !dropdown.contains(e.target)) {
+  if (e.target !== city && !dropdown.contains(e.target)) {
     dropdown.style.display = "none";
   }
 });
 localStorage.clear();
 
+//clicking on search button,calls fetch api
 inputbutton.addEventListener("click",function showData(){
   
+  //input validation
     if(!(/^[A-Za-z]+$/.test(city.value)) || city.value ==""){
         alert("Enter correct city name");
         return;
@@ -82,7 +89,7 @@ inputbutton.addEventListener("click",function showData(){
     fetch(forecaturl).then(response=>response.json()).then(response=> {forecastWeather(response)}).catch(error=>{displayError(error)});
     
   })
-
+//Error message
 function displayError(error){
    const changetemp = document.getElementById("changetemp");
   changetemp.innerHTML = "";
@@ -91,6 +98,8 @@ function displayError(error){
     err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><img class="m-50" src="error.jpg" width="100%" height="100%" alt="invalid url">`;
  
 }
+
+//getting info using location
 function clicked(){
   if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -109,6 +118,7 @@ function clicked(){
 
 }
 
+//displaying weather info
 function displayWeather(response){
     const temp = document.getElementById("tempinfo");
     const weatherinfo = document.getElementById("weatherinfo");
@@ -123,7 +133,7 @@ function displayWeather(response){
     hum.innerHTML="";
     wi.innerHTML="";
    
-    
+    //not correct city
     if(response.cod === "404"){
             const changetemp = document.getElementById("changetemp");
             changetemp.innerHTML = "";
@@ -135,8 +145,9 @@ function displayWeather(response){
         saveCity(cityName);
         console.log(response.main.temp);
         const temperature =Math.round(response.main.temp);
-        setTemp(temperature);
+        setTemp(temperature);//calling temperature change
         const des= response.weather[0].description;
+        //changing background images
         if(des.includes("clear sky")){
           document.body.style.backgroundImage = "url('/public/sunny.gif')";
         }
@@ -154,8 +165,8 @@ function displayWeather(response){
         const todaydate= response.dt;
         const date= new Date(todaydate * 1000);
 
-
-      if(temperature>=40){alert("High temperature");}
+       //alert if temp is greater than 40
+      if(temperature>=40){alert("High temperature, Be careful");}
      temp.innerHTML = `<p class="text-3xl">${temperature}°C</p>`;
       weatherinfo.innerHTML = `<p class="text-3xl">${cityName}</p><p class="text-xl">${date.toDateString()}</p><p class="text-xl">${des}</p>`;
       weathericon.src= iconurl;
@@ -168,7 +179,7 @@ function displayWeather(response){
 
     }
 }
-
+// when clicked on button, the temperature is changed to C/F
 function setTemp(temp) {
   tempInCelsius = temp;
   isCelsius = true; 
@@ -199,6 +210,7 @@ function tempChange(){
 
 }
 
+//displaying forcast information
 function forecastWeather(response){
 
   document.getElementById("forecast").innerText="";
@@ -222,7 +234,7 @@ function forecastWeather(response){
      const iconurl=`https://openweathermap.org/img/wn/${iconcode}@2x.png`
     const fore = document.getElementById("forecast");
     
-     fore.innerHTML+= `<div class="flex flex-col border-2 rounded-lg bg-black m-7 p-2"><img src=${iconurl} alt="icon"><p>${date}</p><p>${temp}°C</p><p>${desc}</p></div>`;
+     fore.innerHTML+= `<div id="fdiv" class="flex flex-col border-2 rounded-lg bg-black m-2 p-2"><img src=${iconurl} alt="icon"><p>${date}</p><p>${temp}°C</p><p>${desc}</p></div>`;
      
     console.log(`${date}: ${temp}°C, ${desc}`);
     });
