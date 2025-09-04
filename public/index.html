@@ -13,12 +13,16 @@
 <body class="bg-[url('/public/clouds.gif')] bg-cover bg-center h-screen">
 
     
-    <div class="text-center">
-        <form>
-           
-        <input type="text" id="city" placeholder="search city" class="border-2 bg-white rounded-lg m-5 w-80 h-10">
-        <button type="button" id="location" onclick="clicked()"><img src="location.gif" width="25" height="25"></button>
-        <button type="button" id="inputbutton" class="bg-white rounded-lg w-20 hover:scale-110 m-2">Search</button>
+    <div>
+       <form onsubmit="event.preventDefault()" class="flex flex-row justify-center">
+         <div class="relative w-60">  
+        <input type="text" id="city" placeholder="search city"  autocomplete="off" class="border-2 bg-white rounded-lg m-5 w-60 h-10">
+         
+        <div id="dropdown" class="absolute right-5 w-70 border-2 rounded-lg shadow hidden max-h-60 overflow-y-auto bg-white"></div></div>
+        <div class="absolute m-6" style="left: 12.5 rem">
+        <button type="button" id="location" onclick="clicked();saveCity();"><img src="location.gif" width="25" height="25"></button></div> 
+        <div class="m-6">
+        <button type="button" id="inputbutton" class="bg-white rounded-lg w-20 h-8 hover:scale-110 ">Search</button></div>
         </form>
     </div>
     <div class="flex flex-row justify-center m-6">
