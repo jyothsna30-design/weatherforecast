@@ -1,8 +1,74 @@
+const dropdown = document.getElementById("dropdown");
+const storageKey = "searchedCities";
 const inputbutton = document.getElementById("inputbutton");
 const city = document.getElementById("city");
+
+function saveCity() {
+  const value = city.value.trim();
+  if (!value) return;
+
+  let cities = localStorage.getItem(storageKey);
+  let arr = cities ? cities.split(",").filter(Boolean) : [];
+
+  
+  if (!arr.some(city => city.toLowerCase() === value.toLowerCase())) {
+    arr.push(value);
+    localStorage.setItem(storageKey, arr.join(","));
+  }
+
+  city.value = "";
+  dropdown.style.display = "none";
+}
+function showDropdown(arr) {
+  dropdown.innerHTML = "";
+
+  if (arr.length === 0) {
+    dropdown.style.display = "none";
+    return;
+  }
+
+  arr.forEach(citys => {
+    const div = document.createElement("div");
+    div.textContent = citys;
+    div.style.margin = "10px";
+    div.style.top="9px";
+    div.addEventListener("click", () => {
+      city.value = citys;
+      dropdown.style.display = "none";
+    });
+    dropdown.appendChild(div);
+  });
+
+  dropdown.style.display = "block";
+}
+city.addEventListener("input", () => {
+  const query = inn.value.trim().toLowerCase();
+  let cities = localStorage.getItem(storageKey);
+  let arr = cities ? cities.split(",").filter(Boolean) : [];
+
+  const matches = query
+    ? arr.filter(city => city.toLowerCase().includes(query))
+    : arr;
+
+  showDropdown(matches);
+});
+
+city.addEventListener("focus", () => {
+  let cities = localStorage.getItem(storageKey);
+  let arr = cities ? cities.split(",").filter(Boolean) : [];
+
+  showDropdown(arr);
+});
+
+document.addEventListener("click", (e) => {
+  if (e.target !== inn && !dropdown.contains(e.target)) {
+    dropdown.style.display = "none";
+  }
+});
+localStorage.clear();
+
 inputbutton.addEventListener("click",function showData(){
-   
-    
+  
     if(!(/^[A-Za-z]+$/.test(city.value)) || city.value ==""){
         alert("Enter correct city name");
         return;
@@ -18,9 +84,12 @@ inputbutton.addEventListener("click",function showData(){
   })
 
 function displayError(error){
+   const changetemp = document.getElementById("changetemp");
+  changetemp.innerHTML = "";
+  changetemp.style.display="none";
     const err = document.getElementById("errordiv");
-    err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><img class="m-50" src="error.jpg" alt="invalid url">`;
-
+    err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><img class="m-50" src="error.jpg" width="100%" height="100%" alt="invalid url">`;
+ 
 }
 function clicked(){
   if ('geolocation' in navigator) {
@@ -48,16 +117,36 @@ function displayWeather(response){
     const wi =document.getElementById("wind");
     temp.innerHTML="";
     weatherinfo.innerHTML="";
-
+    weathericon.innerHTML="";
+    weathericon.src="";
+     weathericon.alt="";
+    hum.innerHTML="";
+    wi.innerHTML="";
+   
+    
     if(response.cod === "404"){
+            const changetemp = document.getElementById("changetemp");
+            changetemp.innerHTML = "";
+            changetemp.style.display="none";
              weatherinfo.innerHTML=`<p class="text-3xl text-center">${response.message}</p><img src="err.png" alt="not found" class="w-50 h-50"> `;
     }
     else{
         const cityName= response.name;
+        saveCity(cityName);
         console.log(response.main.temp);
         const temperature =Math.round(response.main.temp);
         setTemp(temperature);
         const des= response.weather[0].description;
+        if(des.includes("clear sky")){
+          document.body.style.backgroundImage = "url('/public/sunny.gif')";
+        }
+        else if(des.includes("clouds")){
+          document.body.style.backgroundImage = "url('/public/cloudy.jpg')";
+        }
+        else if(des.includes("rain")){
+          document.body.style.backgroundImage = "url('/public/rainy.gif')";
+        }
+
         const humidity= response.main.humidity;
         const wind =response.wind.speed;
         const iconcode= response.weather[0].icon;
@@ -73,14 +162,16 @@ function displayWeather(response){
       weathericon.alt= des;
       hum.innerHTML = `<img src="humidity.gif" alt="humidity" class="w-20 h-20"><p class="text-2xl">Humidity: ${humidity}</p>`;
       wi.innerHTML = `<img src="wind.png" class="w-20 h-20"><p class="text-2xl">Wind: ${wind}</p>`;
-
-
+         
+   const city = document.getElementById("city");
+   city.value="";
 
     }
 }
+
 function setTemp(temp) {
   tempInCelsius = temp;
-  isCelsius = true; // Reset to Celsius by default
+  isCelsius = true; 
   tempChange();
 }
 document.getElementById("changetemp").addEventListener("click", () => {
@@ -98,11 +189,11 @@ function tempChange(){
     const changetemp = document.getElementById("changetemp");
    
     if (isCelsius) {
-    temp.innerHTML = `<p class="text-3xl">${tempInCelsius.toFixed(1)} °C</p>`;
+    temp.innerHTML = `<p class="text-3xl">${tempInCelsius} °C</p>`;
     changetemp.textContent = "Switch to °F";
   } else {
-    const tempF = (tempInCelsius * 9/5) + 32;
-    temp.innerHTML = `<p class="text-3xl">${tempF.toFixed(1)} °F</p>`;
+    const tempF = Math.round((tempInCelsius * 9/5) + 32);
+    temp.innerHTML = `<p class="text-3xl">${tempF} °F</p>`;
     changetemp.textContent = "Switch to °C";
   }
 
@@ -125,7 +216,7 @@ function forecastWeather(response){
         });
         dailyForecasts.forEach(forecast => {
     const date = new Date(forecast.dt * 1000).toDateString();
-    const temp = forecast.main.temp;
+    const temp = Math.round(forecast.main.temp);
     const desc = forecast.weather[0].description;
      const iconcode = forecast.weather[0].icon;
      const iconurl=`https://openweathermap.org/img/wn/${iconcode}@2x.png`
