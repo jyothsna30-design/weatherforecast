@@ -95,7 +95,7 @@ function displayError(error){
   changetemp.innerHTML = "";
   changetemp.style.display="none";
     const err = document.getElementById("errordiv");
-    err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><img class="m-50" src="error.jpg" width="100%" height="100%" alt="invalid url">`;
+    err.innerHTML = `<p class="text-white text-center text-2xl">${error}</p><center><img src="error.jpg" width="500" alt="invalid url"></center>`;
  
 }
 
@@ -166,7 +166,7 @@ function displayWeather(response){
         const date= new Date(todaydate * 1000);
 
        //alert if temp is greater than 40
-      if(temperature>=40){alert("High temperature, Be careful");}
+      if(temperature>=35){alert("High temperature, Be careful");}
      temp.innerHTML = `<p class="text-3xl"><img src="temperature.png" alt="temperature" class="w-10 h-10">${temperature}°C</p>`;
       weatherinfo.innerHTML = `<p class="text-3xl">${cityName}</p><p class="text-xl">${date.toDateString()}</p><p class="text-xl">${des}</p>`;
       weathericon.src= iconurl;
@@ -200,11 +200,11 @@ function tempChange(){
     const changetemp = document.getElementById("changetemp");
    
     if (isCelsius) {
-    temp.innerHTML = `<p class="text-3xl">${tempInCelsius} °C</p>`;
+    temp.innerHTML = `<p class="text-3xl"><img src="temperature.png" alt="temperature" class="w-10 h-10">${tempInCelsius} °C</p>`;
     changetemp.textContent = "Switch to °F";
   } else {
     const tempF = Math.round((tempInCelsius * 9/5) + 32);
-    temp.innerHTML = `<p class="text-3xl">${tempF} °F</p>`;
+    temp.innerHTML = `<p class="text-3xl"><img src="temperature.png" alt="temperature" class="w-10 h-10">${tempF} °F</p>`;
     changetemp.textContent = "Switch to °C";
   }
 
